@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  homelab_health:
+    image: kimbaorrr/homelab_health
+    container_name: homelab_health
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    network_mode: bridge
+    environment:
+      - telegram_chat_id=
+      - telegram_bot_token=
+        
