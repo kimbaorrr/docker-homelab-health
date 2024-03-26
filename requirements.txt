@@ -1,0 +1,5 @@
+pythonping 
+requests 
+argparse 
+speedtest-cli
+multiprocessing

@@ -1,11 +1,12 @@
 FROM python:3.11-alpine
 
-WORKDIR /usr/app/src
-
 ENV telegram_bot_token=""
 ENV telegram_chat_id=""
 
-COPY main.py ./
+RUN mkdir /tmp/homelab 
+WORKDIR /tmp/homelab  
 
-RUN pip install pythonping requests argparse speedtest
-CMD [ "python", "-u", "./main.py -t ${telegram_bot_token} -c ${telegram_chat_id}"]
+ADD . /tmp/homelab/
+
+RUN pip install -r requirements.txt
+CMD [ "python", "/tmp/homelab/main.py -t ${telegram_bot_token} -c ${telegram_chat_id}"]
