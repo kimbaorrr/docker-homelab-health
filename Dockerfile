@@ -7,5 +7,5 @@ ENV telegram_chat_id=""
 
 COPY main.py ./
 
-RUN pip install pythonping requests argparse
-CMD [ "python", "./main.py -t ${telegram_bot_token} -c ${telegram_chat_id}"]
+RUN pip install pythonping requests argparse speedtest
+CMD [ "python", "-u", "./main.py -t ${telegram_bot_token} -c ${telegram_chat_id}"]
