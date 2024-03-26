@@ -4,7 +4,7 @@ import requests
 from pythonping import ping
 import argparse
 from speedtest import Speedtest
-from multiprocessing import Process
+from multiprocess import Process
 
 parser = argparse.ArgumentParser()
 
