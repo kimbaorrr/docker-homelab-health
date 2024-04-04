@@ -30,11 +30,10 @@ datetime_now = str(datetime.now().strftime('%m/%d/%Y %H:%M:%S'))
 
 def send_telegram():
     try:
-        logging.info(f'Sending to {telegram_url}')
         r = requests.post(telegram_url, data=data)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        message = f'Không thể gửi tin nhắn vào lúc {datetime_now} do Server bị mất Internet hoặc Telegram down!'
+        message = f'Không thể gửi tin nhắn đến {telegram_url} vào lúc {datetime_now} !'
         logging.error(message)
         logging.error(err.response.text)
 
