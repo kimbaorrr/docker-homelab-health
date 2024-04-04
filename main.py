@@ -30,6 +30,7 @@ datetime_now = str(datetime.now().strftime('%m/%d/%Y %H:%M:%S'))
 
 def send_telegram():
     try:
+        logging.info(f'Sending to {telegram_url}')
         r = requests.post(telegram_url, data=data)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
