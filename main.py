@@ -15,7 +15,6 @@ parser.add_argument(
     '-c', '--chatid', help='Telegram Chat ID', type=str)
 
 args = parser.parse_args()
-    
 
 
 hosts = ('192.168.1.1', '192.168.1.201', '192.168.1.202', '192.168.1.203', '192.168.1.204', '192.168.1.250',
@@ -51,16 +50,28 @@ def check_routers():
             send_telegram()
 
 
+def ping_host(host):
+    ping_result = ping(host, count=15, timeout=1)
+    return {
+        'avg_latency': ping_result.rtt_avg_ms,
+        'min_latency': ping_result.rtt_min_ms,
+        'max_latency': ping_result.rtt_max_ms,
+        'packet_loss': ping_result.packet_loss
+    }
+
+
 def speedtest_daily():
     """
     Speedtest daily
     """
-    if datetime_now[-9:-3] in ['08:00', '12:00', '19:00']:
+    if datetime_now[-9:-3] in ['08:00', '13:00', '19:00', '22:00']:
         s = Speedtest()
         s.download()
         s.upload()
         results = s.results.dict()
-        mes = f'======= {datetime_now} =======\nServer: {results["server"]["host"]}\nDownload: {int(results["download"] / 10**5)}\nUpload: {int(results["upload"] / 10**5)}\nPing: {results["ping"]}'
+        my_server = results["server"]["host"]
+        results.update(ping_host(my_server))
+        mes = f'======= {datetime_now} =======\nServer: {my_server}\nDownload: {int(results["download"] / 10**5)}\nUpload: {int(results["upload"] / 10**5)}\nPing: {results["ping"]}\nAvg Latency: {results["avg_latency"]}\nPacket Loss: {results["packet_loss"]}'
         logging.info(mes)
         data['text'] = mes
         send_telegram()
