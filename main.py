@@ -10,12 +10,13 @@ import logging
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
-    "-t", "--token", help="Telegram BOT Token", type=str)
+    '-t', '--token', help='Telegram BOT Token', type=str)
 parser.add_argument(
-    "-c", "--chatid", help="Telegram Chat ID", type=str)
-
+    '-c', '--chatid', help='Telegram Chat ID', type=str)
 
 args = parser.parse_args()
+    
+
 
 hosts = ('192.168.1.1', '192.168.1.201', '192.168.1.202', '192.168.1.203', '192.168.1.204', '192.168.1.250',
          '192.168.1.251')
