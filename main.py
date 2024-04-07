@@ -4,7 +4,7 @@ import requests
 from pythonping import ping
 import argparse
 from speedtest import Speedtest
-from multiprocess import Process
+from threading import Thread
 import logging
 
 parser = argparse.ArgumentParser()
@@ -25,7 +25,7 @@ data = {
     'text': ''
 }
 ping_count = 4
-datetime_now = str(datetime.now().strftime('%m/%d/%Y %H:%M:%S'))
+datetime_now = str(datetime.now().strftime('%m/%d/%Y %H:%M'))
 
 
 def send_telegram():
@@ -64,14 +64,14 @@ def speedtest_daily():
     """
     Speedtest daily
     """
-    if datetime_now[-9:-3] in ['08:00', '13:00', '19:00', '22:00']:
+    if datetime_now[-5:] in ['07:00', '13:00', '18:00', '21:00']:
         s = Speedtest()
         s.download()
         s.upload()
         results = s.results.dict()
-        my_server = results["server"]["host"]
+        my_server = str(results['server']['host']).split(':')[0]
         results.update(ping_host(my_server))
-        mes = f'======= {datetime_now} =======\nServer: {my_server}\nDownload: {int(results["download"] / 10**5)}\nUpload: {int(results["upload"] / 10**5)}\nPing: {results["ping"]}\nAvg Latency: {results["avg_latency"]}\nPacket Loss: {results["packet_loss"]}'
+        mes = f'======= {datetime_now} =======\nServer: {my_server}\nISP: {results["server"]["sponsor"]}\nCountry: {results["server"]["country"]}\nDownload: {results["download"] // 10e5}\nUpload: {results["upload"] // 10e5}\nPing: {results["ping"]}\nAvg Latency: {results["avg_latency"]}\nPacket Loss: {round(results["packet_loss"], 2)}'
         logging.info(mes)
         data['text'] = mes
         send_telegram()
@@ -79,9 +79,9 @@ def speedtest_daily():
 
 if __name__ == '__main__':
     while True:
-        p1 = Process(target=check_routers)
-        p2 = Process(target=speedtest_daily)
-        p1.start()
-        p2.start()
-        p1.join()
-        p2.join()
+        t1 = Thread(target=check_routers)
+        t2 = Thread(target=speedtest_daily)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
