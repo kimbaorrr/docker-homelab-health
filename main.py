@@ -25,15 +25,16 @@ data = {
     'text': ''
 }
 ping_count = 4
-datetime_now = str(datetime.now().strftime('%m/%d/%Y %H:%M'))
 
+def get_datetime():
+    return str(datetime.now().strftime('%m/%d/%Y %H:%M'))
 
 def send_telegram():
     try:
         r = requests.post(telegram_url, data=data)
         r.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        message = f'Không thể gửi tin nhắn đến {telegram_url} vào lúc {datetime_now} !'
+        message = f'Không thể gửi tin nhắn đến {telegram_url} vào lúc {get_datetime()} !'
         logging.error(message)
         logging.error(err.response.text)
 
@@ -64,6 +65,7 @@ def speedtest_daily():
     """
     Speedtest daily
     """
+    datetime_now = get_datetime()
     if datetime_now[-5:] in ['07:00', '13:00', '18:00', '21:00']:
         s = Speedtest()
         s.download()
